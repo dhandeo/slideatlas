@@ -24,15 +24,15 @@ class Slideatlas_IndexController extends Slideatlas_AppController
 
   /**	
    * @method init()
-   *  Index Action (first action when we access the application)	
+   * Index Action (first action when we access the application)
    */
-  function init()	
+  function init()
     {
 
     } // end method init
 
   /** index action*/
-  function indexAction()	
+  function indexAction()
     {
     }
 
