@@ -38,7 +38,7 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     {
     $modelLoader = new MIDAS_ModelLoader();
     $slideatlasItemModel = $modelLoader->loadModel('Item', $this->moduleName);
-    $slideatlasItem = $slideatlasItemModel->getByItemId($params['item']->getKey());
+    $slideatlasItem = $slideatlasItemModel->getByItemId($params['item']);
     if($slideatlasItem)
       {
       $slideatlasItemModel->delete($slideatlasItem);
