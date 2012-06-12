@@ -20,7 +20,7 @@ abstract class Slideatlas_ItemModelBase extends Slideatlas_AppModel {
     parent::__construct();
     $this->_name = 'slideatlas_item';
     $this->_key = 'slideatlas_id';
-    $this->_daoName = 'SlideatlasItemDao';
+    $this->_daoName = 'ItemDao';
 
     $this->_mainData = array(
       'slideatlas_id' => array('type' => MIDAS_DATA),
@@ -35,19 +35,19 @@ abstract class Slideatlas_ItemModelBase extends Slideatlas_AppModel {
     $this->initialize(); // required
     }
 
-  public abstract function getByItemId($itemId);
+  abstract public function getByItemId($itemId);
 
 
   /** Create a new slideatals item */
   function createItem($item_id, $item_order)
     {
-    if(!is_int($order))
+    if(!is_int($item_order))
       {
       throw new Zend_Exception('order should be an interger.');
       }
 
     $modelLoader = new MIDAS_ModelLoader();
-    $coreItemModel = $modelLoader->loadModel('item_id');
+    $coreItemModel = $modelLoader->loadModel('Item');
     $coreItem = $coreItemModel->load($item_id);
     if($coreItem === false)
       {

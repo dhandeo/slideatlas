@@ -10,8 +10,8 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.  See the above copyright notices for more information.
 =========================================================================*/
 /** Slideatlas_SlideatlasItemDao */
-class Slideatlas_ItemDao extends AppDao {
+class Slideatlas_ItemDao extends Slideatlas_AppDao {
 
-  public $_model = 'Slideatlas';
+  public $_model = 'Item';
   public $_module = 'slideatlas';
 }
