@@ -36,19 +36,24 @@ abstract class Slideatlas_ItemModelBase extends Slideatlas_AppModel {
     }
 
   abstract public function getByItemId($itemId);
+  abstract public function updateItem($itemId, $itemOrder);
 
 
-  /** Create a new slideatals item */
-  function createItem($item_id, $item_order)
+  /** Create a new slideatals item
+   * @param string $item_id
+   * @param int $item_order
+   * @return The slideatlas item object that was created
+   */
+  function createItem($itemId, $itemOrder)
     {
-    if(!is_int($item_order))
+    if(!is_int($itemOrder))
       {
       throw new Zend_Exception('order should be an interger.');
       }
 
     $modelLoader = new MIDAS_ModelLoader();
     $coreItemModel = $modelLoader->loadModel('Item');
-    $coreItem = $coreItemModel->load($item_id);
+    $coreItem = $coreItemModel->load($itemId);
     if($coreItem === false)
       {
       throw new Exception("This item_id doesn't exist.", MIDAS_INVALID_POLICY);
@@ -56,8 +61,8 @@ abstract class Slideatlas_ItemModelBase extends Slideatlas_AppModel {
 
     $this->loadDaoClass('ItemDao', 'slideatlas');
     $slideatlasItemDao = new Slideatlas_ItemDao();
-    $slideatlasItemDao->setItemId($item_id);
-    $slideatlasItemDao->setItemOrder($item_order);
+    $slideatlasItemDao->setItemId($itemId);
+    $slideatlasItemDao->setItemOrder($itemOrder);
     $this->save($slideatlasItemDao);
     return $slideatlasItemDao;
     }

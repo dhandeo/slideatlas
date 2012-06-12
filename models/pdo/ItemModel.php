@@ -26,4 +26,23 @@ class Slideatlas_ItemModel extends Slideatlas_ItemModelBase {
     return $dao;
     }
 
+  /**
+   * Update a slideatlasItem attributes.
+   */
+  public function updateItem($itemId, $itemOrder)
+    {
+    $sql = $this->database->select()->where('item_id = ?', $itemId);
+    $row = $this->database->fetchRow($sql);
+    if($row)
+      {
+      $this->database->getDB()->update('slideatlas_item',
+                                     array('item_order' => $itemOrder),
+                                     array('item_id = ?' => $itemId));
+      $updatedrow = $this->database->fetchRow($sql);
+      $dao = $this->initDao('Item', $updatedrow, 'slideatlas');
+      }
+
+    return $dao;
+    }
+
 }
