@@ -27,9 +27,9 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     $this->coreWebroot = $fc->getBaseUrl().'/core';
     
     $this->addCallBack('CALLBACK_CORE_ITEM_DELETED', 'handleItemDeleted');
+    $this->addCallBack('CALLBACK_CORE_GET_USER_ACTIONS', 'getUserAction');
     
     }//end init
-    
 
   /**
    * When an item is being deleted, we should delete corresponding row in slideatlas_item tables.  
@@ -44,6 +44,19 @@ class Slideatlas_Notification extends ApiEnabled_Notification
       $slideatlasItemModel->delete($slideatlasItem);
       }
     }
+
+  /** Add a tab to the user's main page to view slideatlas images  */
+  public function getUserAction($args)
+    {
+    $apiargs['useSession'] = true;
+    $slideatlasItems = $this->ModuleComponent->Api->getItems($apiargs);
+
+    $fc = Zend_Controller_Front::getInstance();
+    $moduleWebroot = $fc->getBaseUrl().'/'.$this->moduleName;
+    $moduleFileroot =  $fc->getBaseUrl().'/modules/'.$this->moduleName;
+    return array($this->t('View connectcome images') => 
+                 array("url" => $moduleWebroot.'/user/index', "image" => $moduleFileroot.'/public/images/microscope.png') );
+    }      
   
   } //end class
   

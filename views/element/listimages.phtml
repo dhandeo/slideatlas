@@ -1,0 +1,63 @@
+<?php 
+/*=========================================================================
+MIDAS Server
+Copyright (c) Kitware SAS. 20 rue de la Villette. All rights reserved.
+69328 Lyon, FRANCE.
+
+See Copyright.txt for details.
+This software is distributed WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.  See the above copyright notices for more information.
+=========================================================================*/
+
+?>
+<link type="text/css" rel="stylesheet" href="<?php echo $this->moduleWebroot?>/public/css/element/element.listimages.css" />
+<?php
+
+  
+   if(!function_exists('createImageElement'))
+    {  
+    function createImageElement(&$view,$image)
+      {
+      echo "<div class='feedUserImage'>";
+      echo "<img class='thumbnailSmall' src='{$view->coreWebroot}/public/images/icons/document-big.png' alt=''/>";
+      echo "</div>";
+      echo "<div class='imageInfo'>";
+      echo " <a href='{$view->webroot}/item/{$image['item_id']}'>".trimFileName($image['name'])."</a>";
+      echo "</div>";
+      echo "<div class='imageDate'>";
+      echo  $view->Dateago(strtotime($image['date_update']));
+      echo "</div>";
+      echo "<div style='clear:left;'></div>";
+      }
+    }
+    
+   if(!function_exists('trimFileName'))
+    {  
+    function trimFileName($name)
+      {
+      if(strlen($name)>35)
+        {
+        $name=substr($name,0, 10).'...'.substr($name,strlen($name)-35);
+        }
+      return $name;
+      }
+    }
+  
+  $images=$this->listImages;
+  if(empty($images))
+    {
+    return;
+    }
+  
+  echo "<div class='listImagesContainer'>";
+  foreach($this->listImages as $key => $image)
+    {
+    echo "<div class='imageElement'  element='{$image['item_id']}'>";
+    echo createImageElement($this,$image);
+    echo "</div>";
+    }
+  echo "</div>"; 
+ 
+    
+?>
