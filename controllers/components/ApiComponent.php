@@ -129,6 +129,10 @@ class Slideatlas_ApiComponent extends AppComponent
     $authComponent = $componentLoader->loadComponent('Authentication', 'api');
     $userDao = $authComponent->getUser($args,
                                        Zend_Registry::get('userSession')->Dao);
+    if(!$userDao)
+      {
+      throw new Zend_Exception('You must be logged in to get item attributes');
+      }
     $this->_checkItemExistence($args['id'], $userDao);
 
     $modelLoader = new MIDAS_ModelLoader();
@@ -142,5 +146,41 @@ class Slideatlas_ApiComponent extends AppComponent
 
     return $slideatlasItem->toArray();
     }
+
+  /**
+   * Get slideatlas item information.
+   * @param token Authentication token
+   */
+  public function getItems($args)
+    {
+    $componentLoader = new MIDAS_ComponentLoader();
+    $authComponent = $componentLoader->loadComponent('Authentication', 'api');
+    $userDao = $authComponent->getUser($args,
+                                       Zend_Registry::get('userSession')->Dao);
+
+    if(!$userDao)
+      {
+      throw new Zend_Exception('You must be logged in to get item information');
+      }
+    $modelLoader = new MIDAS_ModelLoader();
+    $itemModel = $modelLoader->loadModel('Item');
+    $slideatlasItemModel = $modelLoader->loadModel('Item', 'slideatlas');
+
+    $ownedItems = $itemModel->getOwnedByUser($userDao);
+    $ownedSlideatlasItems = array();
+    foreach($ownedItems as $ownedItem)
+      {
+      $slideaslasItem = $slideatlasItemModel->getByItemId($ownedItem->getKey());
+      if($slideaslasItem)
+        {
+        $ownedItemArray = $ownedItem->toArray();
+        $ownedItemArray['slideatlas_id'] = $slideaslasItem->getKey();
+        $ownedItemArray['item_order'] = $slideaslasItem->getItemOrder();
+        array_push($ownedSlideatlasItems, $ownedItemArray);
+        }
+      }
+    return $ownedSlideatlasItems;
+    }
+
 
 } // end class

@@ -1,0 +1,22 @@
+div.listImagesContainer {
+
+}
+
+div.listImagesContainer div.imageElement{
+  min-height: 30px;
+  border-bottom: 1px dotted #e4e4e4;
+  position: relative;
+}
+
+
+div.listImagesContainer div.imageDate{
+  position: absolute;
+  bottom: 0px;
+  right:0px;
+  color: grey;
+  font-size: 10px;
+}
+
+div.listImagesContainer div.feedUserImage{
+  float:left;
+}
