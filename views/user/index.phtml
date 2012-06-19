@@ -12,9 +12,20 @@ PURPOSE.  See the above copyright notices for more information.
 
 ?>
 <link type="text/css" rel="stylesheet" href="<?php echo $this->coreWebroot?>/public/css/common/common.genericPage.css" />
+<link type="text/css" rel="stylesheet" href="<?php echo $this->coreWebroot?>/public/css/user/user.genericPage.css" />
 <link type="text/css" rel="stylesheet" href="<?php echo $this->moduleWebroot?>/public/css/element/element.listfiles.css" />
 
 <div class="viewMain">
+   <div class ="genericWrapperTopRight">
+         <?php
+          echo '<div style="float:right;margin-right:2px;" class="genericBigButton ">';
+            echo "<a  href='{$this->webroot}/user/userpage'><img style='float:left;margin-right:2px;' alt='' src='{$this->coreWebroot}/public/images/icons/back.png'/>";
+            echo $this->t('Back');  
+            echo "</a>";
+          echo '</div>';
+          
+        ?>
+  </div>   
   <div class="genericThumbnail">
   <?php
   echo $this->userthumbnail($this->user->getThumbnail());
@@ -42,8 +53,8 @@ PURPOSE.  See the above copyright notices for more information.
           ?>
         </span>
       </div>
-    <div class="genericSubtitle">Connectcome Images</div>
   </div>
+  <div class="viewHeader">Connectcome Images</div>
   <div class="listimages">
    <?php
     if($this->isViewAction)
