@@ -8,6 +8,13 @@ div.listImagesContainer div.imageElement{
   position: relative;
 }
 
+div.listImagesContainer div.imageOrder{
+  position: absolute;
+  bottom: 0px;
+  right: 100px;
+  color: grey;
+  font-size: 10px;
+}
 
 div.listImagesContainer div.imageDate{
   position: absolute;

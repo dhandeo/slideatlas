@@ -25,6 +25,9 @@ PURPOSE.  See the above copyright notices for more information.
       echo "<div class='imageInfo'>";
       echo " <a href='{$view->webroot}/item/{$image['item_id']}'>".trimFileName($image['name'])."</a>";
       echo "</div>";
+      echo "<div class='imageOrder'>";
+      echo  strval($image['item_order']);
+      echo "</div>";
       echo "<div class='imageDate'>";
       echo  $view->Dateago(strtotime($image['date_update']));
       echo "</div>";
@@ -44,14 +47,15 @@ PURPOSE.  See the above copyright notices for more information.
       }
     }
   
-  $images=$this->listImages;
+  $images = $this->listImages;
   if(empty($images))
     {
     return;
     }
   
   echo "<div class='listImagesContainer'>";
-  foreach($this->listImages as $key => $image)
+  ksort($images);
+  foreach($images as $key => $image)
     {
     echo "<div class='imageElement'  element='{$image['item_id']}'>";
     echo createImageElement($this,$image);
