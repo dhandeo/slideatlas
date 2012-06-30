@@ -49,12 +49,13 @@ class Slideatlas_Notification extends ApiEnabled_Notification
   public function getUserAction($args)
     {
     $apiargs['useSession'] = true;
-    $slideatlasItems = $this->ModuleComponent->Api->getItems($apiargs);
+    $apiargs['type'] = 'diced';
+    $slideatlasItems = $this->ModuleComponent->Api->userGetItems($apiargs);
 
     $fc = Zend_Controller_Front::getInstance();
     $moduleWebroot = $fc->getBaseUrl().'/'.$this->moduleName;
     $moduleFileroot =  $fc->getBaseUrl().'/modules/'.$this->moduleName;
-    return array($this->t('View connectcome images') => 
+    return array($this->t('View connectome images') => 
                  array("url" => $moduleWebroot.'/user/index', "image" => $moduleFileroot.'/public/images/microscope.png') );
     }      
   

@@ -43,16 +43,16 @@ class Slideatlas_ApiComponent extends AppComponent
     }
 
   /**
-   * Mark the given regular item as a slideatlas item.
-   * Or update an existing one if one exists by the order passed.
+   * Mark a regular item as a slideatlas item and set its item type.
+   * Or update the item type for an existing slideatlas item.
    * @param token Authentication token
    * @param id The id of the item.
-   * @param order(Optional) item order used to sort slideatlas items
-   * @return The slideatlas item object that was created
+   * @param type The type of the item. currently supported types: 1) raw ; 2) diced
+   * @return The slideatlas item object that was created or updated
    */
   public function markItem($args)
     {
-    $this->_checkKeys(array('id'), $args);
+    $this->_checkKeys(array('id', 'type'), $args);
 
     $componentLoader = new MIDAS_ComponentLoader();
     $authComponent = $componentLoader->loadComponent('Authentication', 'api');
@@ -60,28 +60,29 @@ class Slideatlas_ApiComponent extends AppComponent
                                        Zend_Registry::get('userSession')->Dao);
     if(!$userDao)
       {
-      throw new Exception('Cannot mark item anonymously', MIDAS_INVALID_POLICY);
+      throw new Exception('Cannot set item type anonymously', MIDAS_INVALID_POLICY);
       }
     $this->_checkItemExistence($args['id'], $userDao);
 
+    if((strcasecmp($args['type'], 'raw') != 0)  && (strcasecmp($args['type'], 'diced') != 0) )
+      {
+      throw new Exception('Unknown type. Currenlty supported types: 1) raw ; 2) diced ', MIDAS_INVALID_POLICY);
+      }
+    $itemType = SLIDEATLAS_RAW_IMAGE;
+    if(strcasecmp($args['type'], 'diced') == 0)
+      {
+      $itemType = SLIDEATLAS_DICED_IMAGE;
+      }
     $modelLoader = new MIDAS_ModelLoader();
     $slideatlasItemModel = $modelLoader->loadModel('Item', 'slideatlas');
     $slideatlasItem = $slideatlasItemModel->getByItemId($args['id']);
     if($slideatlasItem == false)
       {
-      if(isset($args['order']))
-        {
-        $order = intval($args['order']);
-        }
-      else
-        {
-        $order = 0; // TODO
-        }
-      $slideatlasItem = $slideatlasItemModel->createItem($args['id'], $order);
+      $slideatlasItem = $slideatlasItemModel->createItem($args['id'], $itemType);
       }
-    else if(isset($args['order']))
+    else
       {
-      $slideatlasItem = $slideatlasItemModel->updateItem($args['id'], intval($args['order']));
+      $slideatlasItem = $slideatlasItemModel->updateItemType($args['id'], $itemType);
       }
 
     return $slideatlasItem->toArray();
@@ -148,10 +149,11 @@ class Slideatlas_ApiComponent extends AppComponent
     }
 
   /**
-   * Get slideatlas item information.
+   * Get all the slideatlas items accessable for current user.
    * @param token Authentication token
+   * @param type The type of the item. currently supported types: 1) raw ; 2) diced
    */
-  public function getItems($args)
+  public function userGetItems($args)
     {
     $componentLoader = new MIDAS_ComponentLoader();
     $authComponent = $componentLoader->loadComponent('Authentication', 'api');
@@ -160,26 +162,109 @@ class Slideatlas_ApiComponent extends AppComponent
 
     if(!$userDao)
       {
-      throw new Zend_Exception('You must be logged in to get item information');
+      throw new Zend_Exception('You must be logged in to get slidealas items');
       }
+    if((strcasecmp($args['type'], 'raw') != 0)  && (strcasecmp($args['type'], 'diced') != 0) )
+      {
+      throw new Exception('Unknown type. Currenlty supported types: 1) raw ; 2) diced ', MIDAS_INVALID_POLICY);
+      }
+    $itemType = SLIDEATLAS_RAW_IMAGE;
+    if(strtolower($args['type']) == 'diced')
+      {
+      $itemType = SLIDEATLAS_DICED_IMAGE;
+      }
+
     $modelLoader = new MIDAS_ModelLoader();
     $itemModel = $modelLoader->loadModel('Item');
+    $userModel = $modelLoader->loadModel('User');
     $slideatlasItemModel = $modelLoader->loadModel('Item', 'slideatlas');
 
     $ownedItems = $itemModel->getOwnedByUser($userDao);
-    $ownedSlideatlasItems = array();
-    foreach($ownedItems as $ownedItem)
+    $sharedItems = $itemModel->getSharedToUser($userDao);
+    $allItems = array_merge($ownedItems, $sharedItems);
+    $allItemIds = array();
+    foreach($allItems as $item)
       {
-      $slideaslasItem = $slideatlasItemModel->getByItemId($ownedItem->getKey());
-      if($slideaslasItem)
+      array_push($allItemIds, $item->getKey());
+      }
+    $communities = $userModel->getUserCommunities($userDao);
+    foreach($communities as $community)
+      {
+      $communityItems = $itemModel->getSharedToCommunity($community);
+      foreach($communityItems as $communityItem)
         {
-        $ownedItemArray = $ownedItem->toArray();
-        $ownedItemArray['slideatlas_id'] = $slideaslasItem->getKey();
-        $ownedItemArray['item_order'] = $slideaslasItem->getItemOrder();
-        array_push($ownedSlideatlasItems, $ownedItemArray);
+        if(!in_array($communityItem->getKey(), $allItemIds))
+          {
+          array_push($communityItem, $allItems);
+          array_push($communityItem->getKey, $allItemIds);
+          }
         }
       }
-    return $ownedSlideatlasItems;
+    $returnSlideatlasItems = array();
+    foreach($allItems as $item)
+      {
+      $slideaslasItem = $slideatlasItemModel->getByItemId($item->getKey());
+      if($slideaslasItem && $slideaslasItem->getItemType() == $itemType)
+        {
+        $accessibleItemArray = $item->toArray();
+        $accessibleItemArray['slideatlas_id'] = $slideaslasItem->getKey();
+        $accessibleItemArray['item_type'] = $itemType;
+        $accessibleItemArray['item_order'] = $slideaslasItem->getItemOrder();
+        array_push($returnSlideatlasItems, $accessibleItemArray);
+        }
+      }
+    return $returnSlideatlasItems;
+    }
+
+  /**
+   * Get all the slideatlas items in the database.
+   * @param token Authentication token
+   * @param type The type of the item. currently supported types: 1) raw ; 2) diced
+   */
+  public function adminGetItems($args)
+    {
+    $componentLoader = new MIDAS_ComponentLoader();
+    $authComponent = $componentLoader->loadComponent('Authentication', 'api');
+    $userDao = $authComponent->getUser($args,
+                                       Zend_Registry::get('userSession')->Dao);
+
+    if(!$userDao)
+      {
+      throw new Zend_Exception('You must be logged in to get all slidealas items');
+      }
+    if(!$userDao->getAdmin())
+      {
+      throw new Zend_Exception('You must be an admin to get all slidealas items');
+      }
+    if((strcasecmp($args['type'], 'raw') != 0)  && (strcasecmp($args['type'], 'diced') != 0) )
+      {
+      throw new Exception('Unknown type. Currenlty supported types: 1) raw ; 2) diced ', MIDAS_INVALID_POLICY);
+      }
+
+    $modelLoader = new MIDAS_ModelLoader();
+    $itemModel = $modelLoader->loadModel('Item');
+    $slideatlasItemModel = $modelLoader->loadModel('Item', 'slideatlas');
+    $allslideatlasItems = array();
+    if(strtolower($args['type']) == 'diced')
+      {
+      $allslideatlasItems = $slideatlasItemModel->getAllByItemType(SLIDEATLAS_DICED_IMAGE);
+      }
+    else
+      {
+      $allslideatlasItems = $slideatlasItemModel->getAllByItemType(SLIDEATLAS_RAW_IMAGE);
+      }
+    $returnSlideatlasItems = array();
+    foreach($allslideatlasItems as $slideatlasItem)
+      {
+      $regularItem = $itemModel->getByItemId($slideatlasItem->getItemId());
+      $accessibleItemArray = $regularItem->toArray();
+      $accessibleItemArray['slideatlas_id'] = $slideatlasItem->getKey();
+      $accessibleItemArray['item_type'] = $slideatlasItem->getItemType();
+      $accessibleItemArray['item_order'] = $slideatlasItem->getItemOrder();
+      array_push($returnSlideatlasItems, $accessibleItemArray);
+      }
+
+    return $returnSlideatlasItems;
     }
 
 
