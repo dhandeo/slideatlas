@@ -28,6 +28,8 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     
     $this->addCallBack('CALLBACK_CORE_ITEM_DELETED', 'handleItemDeleted');
     $this->addCallBack('CALLBACK_CORE_GET_USER_ACTIONS', 'getUserAction');
+    $this->addCallBack('CALLBACK_CORE_GET_FOOTER_HEADER', 'getHeader');
+    $this->addCallBack('CALLBACK_CORE_LAYOUT_TOPBUTTONS', 'getButton');
     
     }//end init
 
@@ -55,10 +57,39 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     $fc = Zend_Controller_Front::getInstance();
     $moduleWebroot = $fc->getBaseUrl().'/'.$this->moduleName;
     $moduleFileroot =  $fc->getBaseUrl().'/modules/'.$this->moduleName;
-    return array($this->t('View connectome images') => 
+    return array($this->t('View Images') => 
                  array("url" => $moduleWebroot.'/user/index', "image" => $moduleFileroot.'/public/images/microscope.png') );
     }      
   
-  } //end class
+  /** get layout header */
+  public function getHeader()
+    {
+    return '<link type="text/css" rel="stylesheet" href="'.Zend_Registry::get('webroot').'/modules/slideatlas/public/css/layout/slideatlas.css" />';
+    }  
+    
+  /** add a view image button  */ 
+  public function getButton($params)
+    {
+    if(!isset($this->userSession->Dao))
+      {
+      return array();
+      }
+    else
+      {
+      $fc = Zend_Controller_Front::getInstance();
+      $baseURL = $fc->getBaseUrl();
+      $moduleWebroot = $baseURL . '/' . $this->moduleName;
+      $moduleFileroot =  $fc->getBaseUrl().'/modules/'.$this->moduleName;
+      $html =  "<li class='viewImageButton' style='margin-left:5px;' title='Viwe Images' rel='".$moduleWebroot."/user/index'>
+              <a href='".$moduleWebroot."/user/index'><img id='vieImageButtonImg' src= '".$moduleFileroot."/public/images/microscope.png' alt='View Images'/>
+              <img id='viewImageButtonLoading' style='margin-top:5px;display:none;' src='".$baseURL."/core/public/images/icons/loading.gif' alt=''/>
+              View Images
+              </a>
+              </li> ";
+      return $html;
+      }
+    }
+    
+} //end class
   
 ?>

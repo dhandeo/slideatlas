@@ -195,8 +195,8 @@ class Slideatlas_ApiComponent extends AppComponent
         {
         if(!in_array($communityItem->getKey(), $allItemIds))
           {
-          array_push($communityItem, $allItems);
-          array_push($communityItem->getKey, $allItemIds);
+          array_push($allItems, $communityItem);
+          array_push($allItemIds, $communityItem->getKey());
           }
         }
       }
