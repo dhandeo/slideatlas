@@ -77,4 +77,78 @@ class Slideatlas_UserController extends Slideatlas_AppController
 
     $this->view->isViewAction = ($this->logged && ($this->userSession->Dao->getKey() == $userDao->getKey() || $this->userSession->Dao->isAdmin()));
     }
+    
+  /** fullscreen action*/
+  function fullscreenAction()
+    {
+    $this->_helper->layout->disableLayout();
+    
+    $user_id = $this->_getParam("user_id");
+    if(!isset($user_id) && !$this->logged)
+      {
+      $this->view->header = $this->t(MIDAS_LOGIN_REQUIRED);
+      $this->_helper->viewRenderer->setNoRender();
+      return false;
+      }
+    elseif(!isset($user_id))
+      {
+      $userDao = $this->userSession->Dao;
+      $this->view->activemenu = 'myprofile'; // set the active menu
+      }
+    else
+      {
+      $userDao = $this->User->load($user_id);
+      if($userDao->getPrivacy() == MIDAS_USER_PRIVATE &&
+        (!$this->logged || $this->userSession->Dao->getKey() != $userDao->getKey()) &&
+        (!isset($this->userSession->Dao) || !$this->userSession->Dao->isAdmin()))
+        {
+        throw new Zend_Exception("Permission error");
+        }
+      }
+    if(!$userDao instanceof UserDao)
+      {
+      throw new Zend_Controller_Action_Exception("Unable to find user", 404);
+      }
+
+    $this->view->user = $userDao;
+    $this->view->imageName = $this->_getParam("imageName");
+    $this->view->levels = $this->_getParam("levels");
+    $this->view->tileSize = $this->_getParam("tileSize");
+    }
+    
+  /** chunk action*/
+  function chunkAction()
+    {
+    $this->_helper->layout->disableLayout();
+    
+    $user_id = $this->_getParam("user_id");
+    if(!isset($user_id) && !$this->logged)
+      {
+      $this->view->header = $this->t(MIDAS_LOGIN_REQUIRED);
+      $this->_helper->viewRenderer->setNoRender();
+      return false;
+      }
+    elseif(!isset($user_id))
+      {
+      $userDao = $this->userSession->Dao;
+      $this->view->activemenu = 'myprofile'; // set the active menu
+      }
+    else
+      {
+      $userDao = $this->User->load($user_id);
+      if($userDao->getPrivacy() == MIDAS_USER_PRIVATE &&
+        (!$this->logged || $this->userSession->Dao->getKey() != $userDao->getKey()) &&
+        (!isset($this->userSession->Dao) || !$this->userSession->Dao->isAdmin()))
+        {
+        throw new Zend_Exception("Permission error");
+        }
+      }
+    if(!$userDao instanceof UserDao)
+      {
+      throw new Zend_Controller_Action_Exception("Unable to find user", 404);
+      }
+    
+    $this->view->image = $this->_getParam("image");
+    $this->view->name = $this->_getParam("name");
+    }
 }//end class
