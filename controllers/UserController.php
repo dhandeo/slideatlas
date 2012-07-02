@@ -77,12 +77,12 @@ class Slideatlas_UserController extends Slideatlas_AppController
 
     $this->view->isViewAction = ($this->logged && ($this->userSession->Dao->getKey() == $userDao->getKey() || $this->userSession->Dao->isAdmin()));
     }
-    
+
   /** fullscreen action*/
   function fullscreenAction()
     {
     $this->_helper->layout->disableLayout();
-    
+
     $user_id = $this->_getParam("user_id");
     if(!isset($user_id) && !$this->logged)
       {
@@ -111,16 +111,16 @@ class Slideatlas_UserController extends Slideatlas_AppController
       }
 
     $this->view->user = $userDao;
-    $this->view->imageName = $this->_getParam("imageName");
-    $this->view->levels = $this->_getParam("levels");
-    $this->view->tileSize = $this->_getParam("tileSize");
+    $this->view->json['slideatlas']['imageName'] = $this->_getParam("image");
+    $this->view->json['slideatlas']['zoomLevels'] = $this->_getParam("levels");
+    $this->view->json['slideatlas']['tileSize'] = $this->_getParam("tileSize");
     }
-    
+
   /** chunk action*/
   function chunkAction()
     {
     $this->_helper->layout->disableLayout();
-    
+
     $user_id = $this->_getParam("user_id");
     if(!isset($user_id) && !$this->logged)
       {
@@ -147,7 +147,7 @@ class Slideatlas_UserController extends Slideatlas_AppController
       {
       throw new Zend_Controller_Action_Exception("Unable to find user", 404);
       }
-    
+
     $this->view->image = $this->_getParam("image");
     $this->view->name = $this->_getParam("name");
     }
