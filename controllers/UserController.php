@@ -34,8 +34,8 @@ class Slideatlas_UserController extends Slideatlas_AppController
 
     } // end method init
 
-  /** index action*/
-  function indexAction()
+  /** list action*/
+  function listAction()
     {
     $this->view->Date = $this->Component->Date;
     $user_id = $this->_getParam("user_id");

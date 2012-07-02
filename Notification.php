@@ -57,8 +57,8 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     $fc = Zend_Controller_Front::getInstance();
     $moduleWebroot = $fc->getBaseUrl().'/'.$this->moduleName;
     $moduleFileroot =  $fc->getBaseUrl().'/modules/'.$this->moduleName;
-    return array($this->t('View Images') => 
-                 array("url" => $moduleWebroot.'/user/index', "image" => $moduleFileroot.'/public/images/microscope.png') );
+    return array($this->t('Slide Atlas') => 
+                 array("url" => $moduleWebroot.'/user/list', "image" => $moduleFileroot.'/public/images/microscope.png') );
     }      
   
   /** get layout header */
@@ -80,10 +80,10 @@ class Slideatlas_Notification extends ApiEnabled_Notification
       $baseURL = $fc->getBaseUrl();
       $moduleWebroot = $baseURL . '/' . $this->moduleName;
       $moduleFileroot =  $fc->getBaseUrl().'/modules/'.$this->moduleName;
-      $html =  "<li class='viewImageButton' style='margin-left:5px;' title='Viwe Images' rel='".$moduleWebroot."/user/index'>
-              <a href='".$moduleWebroot."/user/index'><img id='vieImageButtonImg' src= '".$moduleFileroot."/public/images/microscope.png' alt='View Images'/>
-              <img id='viewImageButtonLoading' style='margin-top:5px;display:none;' src='".$baseURL."/core/public/images/icons/loading.gif' alt=''/>
-              View Images
+      $html =  "<li class='listButton' style='margin-left:5px;' title='Slide Atlas' rel='".$moduleWebroot."/user/list'>
+              <a href='".$moduleWebroot."/user/list'><img id='vieImageButtonImg' src= '".$moduleFileroot."/public/images/microscope.png' alt='Slide Atlas'/>
+              <img id='listButtonLoading' style='margin-top:5px;display:none;' src='".$baseURL."/core/public/images/icons/loading.gif' alt=''/>
+              Slide Atlas
               </a>
               </li> ";
       return $html;

@@ -1,12 +1,14 @@
 
 img.thumbnailHuge{
-  width: 72px;
-  height: 72px;
-  margin-right: 6px;
+  width: 48px;
+  height: 48px;
+  margin-right: 10px;
 }
 
 div.listImagesContainer div.imageInfo a{
-  font-weight: 1000;
+  position: absolute;
+  top: 30%;
+  font-size: 18px;
 }
 
 div.listImagesContainer div.imageElement{
@@ -15,20 +17,13 @@ div.listImagesContainer div.imageElement{
   position: relative;
 }
 
-div.listImagesContainer div.imageOrder{
-  position: absolute;
-  bottom: 0px;
-  right: 100px;
-  color: grey;
-  font-size: 10px;
-}
 
 div.listImagesContainer div.imageDate{
   position: absolute;
-  bottom: 0px;
+  bottom: 35%;
   right:0px;
   color: grey;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 div.listImagesContainer div.feedUserImage{
