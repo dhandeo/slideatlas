@@ -18,6 +18,29 @@
  limitations under the License.
 =========================================================================*/
 
-define("SLIDEATLAS_RAW_IMAGE", 1);
-define("SLIDEATLAS_DICED_IMAGE", 2);
+class Slideatlas_Upgrade_0_1_0 extends MIDASUpgrade
+{
+  public function preUpgrade()
+    {
+
+    }
+
+  public function mysql()
+    {
+    $sql = "ALTER TABLE `slideatlas_item` ADD COLUMN `item_type` bigint(20)";
+    $this->db->query($sql);
+    }
+
+  public function pgsql()
+    {
+    $sql = "ALTER TABLE slideatlas_item ADD COLUMN item_type bigint";
+    $this->db->query($sql);
+    }
+
+
+  public function postUpgrade()
+    {
+
+    }
+}
 ?>

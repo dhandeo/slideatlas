@@ -34,8 +34,8 @@ class Slideatlas_UserController extends Slideatlas_AppController
 
     } // end method init
 
-  /** index action*/
-  function indexAction()
+  /** list action*/
+  function listAction()
     {
     $this->view->Date = $this->Component->Date;
     $user_id = $this->_getParam("user_id");
@@ -70,7 +70,8 @@ class Slideatlas_UserController extends Slideatlas_AppController
     if(!empty($this->userSession->Dao) && ($userDao->getKey() == $this->userSession->Dao->getKey() || $this->userSession->Dao->isAdmin()))
       {
       $args['useSession'] = true;
-      $listImages = $this->ModuleComponent->Api->getItems($args);
+      $args['type'] = 'diced';
+      $listImages = $this->ModuleComponent->Api->userGetItems($args);
       $this->view->listImages = $listImages;
       }
 

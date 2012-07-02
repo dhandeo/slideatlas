@@ -28,6 +28,8 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     
     $this->addCallBack('CALLBACK_CORE_ITEM_DELETED', 'handleItemDeleted');
     $this->addCallBack('CALLBACK_CORE_GET_USER_ACTIONS', 'getUserAction');
+    $this->addCallBack('CALLBACK_CORE_GET_FOOTER_HEADER', 'getHeader');
+    $this->addCallBack('CALLBACK_CORE_LAYOUT_TOPBUTTONS', 'getButton');
     
     }//end init
 
@@ -49,15 +51,45 @@ class Slideatlas_Notification extends ApiEnabled_Notification
   public function getUserAction($args)
     {
     $apiargs['useSession'] = true;
-    $slideatlasItems = $this->ModuleComponent->Api->getItems($apiargs);
+    $apiargs['type'] = 'diced';
+    $slideatlasItems = $this->ModuleComponent->Api->userGetItems($apiargs);
 
     $fc = Zend_Controller_Front::getInstance();
     $moduleWebroot = $fc->getBaseUrl().'/'.$this->moduleName;
     $moduleFileroot =  $fc->getBaseUrl().'/modules/'.$this->moduleName;
-    return array($this->t('View connectcome images') => 
-                 array("url" => $moduleWebroot.'/user/index', "image" => $moduleFileroot.'/public/images/microscope.png') );
+    return array($this->t('Slide Atlas') => 
+                 array("url" => $moduleWebroot.'/user/list', "image" => $moduleFileroot.'/public/images/microscope.png') );
     }      
   
-  } //end class
+  /** get layout header */
+  public function getHeader()
+    {
+    return '<link type="text/css" rel="stylesheet" href="'.Zend_Registry::get('webroot').'/modules/slideatlas/public/css/layout/slideatlas.css" />';
+    }  
+    
+  /** add a view image button  */ 
+  public function getButton($params)
+    {
+    if(!isset($this->userSession->Dao))
+      {
+      return array();
+      }
+    else
+      {
+      $fc = Zend_Controller_Front::getInstance();
+      $baseURL = $fc->getBaseUrl();
+      $moduleWebroot = $baseURL . '/' . $this->moduleName;
+      $moduleFileroot =  $fc->getBaseUrl().'/modules/'.$this->moduleName;
+      $html =  "<li class='listButton' style='margin-left:5px;' title='Slide Atlas' rel='".$moduleWebroot."/user/list'>
+              <a href='".$moduleWebroot."/user/list'><img id='vieImageButtonImg' src= '".$moduleFileroot."/public/images/microscope.png' alt='Slide Atlas'/>
+              <img id='listButtonLoading' style='margin-top:5px;display:none;' src='".$baseURL."/core/public/images/icons/loading.gif' alt=''/>
+              Slide Atlas
+              </a>
+              </li> ";
+      return $html;
+      }
+    }
+    
+} //end class
   
 ?>

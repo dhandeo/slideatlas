@@ -25,6 +25,7 @@ abstract class Slideatlas_ItemModelBase extends Slideatlas_AppModel {
     $this->_mainData = array(
       'slideatlas_id' => array('type' => MIDAS_DATA),
       'item_id' => array('type' => MIDAS_DATA),
+      'item_type' => array('type' => MIDAS_DATA),
       'item_order' => array('type' => MIDAS_DATA),
       'item' =>  array('type' => MIDAS_ONE_TO_ONE,
                         'model' => 'item',
@@ -36,25 +37,28 @@ abstract class Slideatlas_ItemModelBase extends Slideatlas_AppModel {
     }
 
   abstract public function getByItemId($itemId);
-  abstract public function updateItem($itemId, $itemOrder);
+  abstract function getAllByItemType($itemType);
+  abstract public function updateItemType($itemId, $itemType);
+  abstract public function updateItemOrder($itemId, $itemOrder);
 
 
   /** Create a new slideatals item
    * @param string $item_id
    * @param int $item_order
+   * @param int $item_Type
    * @return The slideatlas item object that was created
    */
-  function createItem($itemId, $itemOrder)
+  function createItem($itemId, $itemType, $itemOrder = 0)
     {
-    if(!is_int($itemOrder))
+    if(($itemType != SLIDEATLAS_RAW_IMAGE) && ($itemType != SLIDEATLAS_DICED_IMAGE) )
       {
-      throw new Zend_Exception('order should be an interger.');
+      throw new Zend_Exception('Unkown slideatlas item type.');
       }
 
     $modelLoader = new MIDAS_ModelLoader();
     $coreItemModel = $modelLoader->loadModel('Item');
     $coreItem = $coreItemModel->load($itemId);
-    if($coreItem === false)
+    if($coreItem == false)
       {
       throw new Exception("This item_id doesn't exist.", MIDAS_INVALID_POLICY);
       }
@@ -62,6 +66,7 @@ abstract class Slideatlas_ItemModelBase extends Slideatlas_AppModel {
     $this->loadDaoClass('ItemDao', 'slideatlas');
     $slideatlasItemDao = new Slideatlas_ItemDao();
     $slideatlasItemDao->setItemId($itemId);
+    $slideatlasItemDao->setItemType($itemType);
     $slideatlasItemDao->setItemOrder($itemOrder);
     $this->save($slideatlasItemDao);
     return $slideatlasItemDao;
