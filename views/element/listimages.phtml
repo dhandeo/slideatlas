@@ -20,7 +20,7 @@ PURPOSE.  See the above copyright notices for more information.
     function createImageElement(&$view,$image)
       {
       echo "<div class='feedUserImage'>";
-      echo "<a href='{$view->moduleWebroot}/views/viewer/fullscreen.php?image={$image['name']}&levels=6&tileSzie=128'>";
+      echo "<a href='{$view->webroot}/slideatlas/user/fullscreen?image={$image['name']}&levels=6&tileSize=256'>";
       echo "<img class='thumbnailHuge' src='{$view->moduleWebroot}/public/images/microscope-huge.png' alt=''/>";
       echo "</a>";
       echo "</div>";

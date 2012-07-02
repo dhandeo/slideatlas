@@ -14,8 +14,6 @@ div.HeaderAction ul li.listButton:hover{
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5b7ad2', endColorstr='#42779d');
 }
 
-div.viewWrapper {
-  margin-top: 0px;
-  position: relative;
-  padding-right: 30px;
+div.slideatlas_viewWrapper {
+  margin-right: -245px;
 }

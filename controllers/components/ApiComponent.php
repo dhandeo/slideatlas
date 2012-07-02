@@ -256,7 +256,7 @@ class Slideatlas_ApiComponent extends AppComponent
     $returnSlideatlasItems = array();
     foreach($allslideatlasItems as $slideatlasItem)
       {
-      $regularItem = $itemModel->getByItemId($slideatlasItem->getItemId());
+      $regularItem = $itemModel->load($slideatlasItem->getItemId());
       $accessibleItemArray = $regularItem->toArray();
       $accessibleItemArray['slideatlas_id'] = $slideatlasItem->getKey();
       $accessibleItemArray['item_type'] = $slideatlasItem->getItemType();
