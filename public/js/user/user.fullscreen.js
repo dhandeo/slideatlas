@@ -8,7 +8,6 @@ var json = $.parseJSON($('div.jsonContent').html());
 var imageName = json.slideatlas.imageName;
 var tileSize = parseInt(json.slideatlas.tileSize);
 var zoomLevels = parseInt(json.slideatlas.zoomLevels);
-
 $(document).ready(function() {
 	mapcontainer = $('#mapcontainer');
 	mapdiv = $('#map');

@@ -42,6 +42,40 @@ class Slideatlas_ApiComponent extends AppComponent
       }
     }
 
+  private function _getSlideatlasMetaData($itemid)
+    {
+    $modelLoader = new MIDAS_ModelLoader();
+    $itemModel = $modelLoader->loadModel('Item');
+    $item = $itemModel->load($itemid);
+    $revisionDao = $itemModel->getLastRevision($item);
+    if(!$revisionDao)
+      {
+      throw new Exception("The item must have at least one revision to have metadata.", MIDAS_INVALID_POLICY);
+      }
+
+    $itemRevisionModel = $modelLoader->loadModel('ItemRevision');
+    $metadata = $itemRevisionModel->getMetadata($revisionDao);
+    $metadataArray = array();
+    foreach($metadata as $m)
+      {
+      $mArray = $m->toArray();
+      if(($mArray['element'] == 'tileSize') || ($mArray['element'] == 'levels'))
+        {
+        if(array_key_exists($mArray['element'], $metadataArray))
+          {
+          throw new Exception("This item has duplicated metadata.", MIDAS_INVALID_POLICY);
+          }
+        $metadataArray[$mArray['element']] = $mArray['value'];
+        }
+      }
+    if((!array_key_exists('tileSize', $metadataArray)) || (!array_key_exists('levels', $metadataArray)) )
+      {
+      throw new Exception("This item't metada doesn't include levels and/or tileSize.", MIDAS_INVALID_POLICY);
+      }
+
+    return $metadataArray;
+    }
+
   /**
    * Mark a regular item as a slideatlas item and set its item type.
    * Or update the item type for an existing slideatlas item.
@@ -210,6 +244,12 @@ class Slideatlas_ApiComponent extends AppComponent
         $accessibleItemArray['slideatlas_id'] = $slideaslasItem->getKey();
         $accessibleItemArray['item_type'] = $itemType;
         $accessibleItemArray['item_order'] = $slideaslasItem->getItemOrder();
+        if($itemType == SLIDEATLAS_DICED_IMAGE)
+          {
+          $metaDataArray = $this->_getSlideatlasMetaData($item->getKey());
+          $accessibleItemArray['levels'] = $metaDataArray['levels'];
+          $accessibleItemArray['tileSize'] = $metaDataArray['tileSize'];
+          }
         array_push($returnSlideatlasItems, $accessibleItemArray);
         }
       }
@@ -261,6 +301,12 @@ class Slideatlas_ApiComponent extends AppComponent
       $accessibleItemArray['slideatlas_id'] = $slideatlasItem->getKey();
       $accessibleItemArray['item_type'] = $slideatlasItem->getItemType();
       $accessibleItemArray['item_order'] = $slideatlasItem->getItemOrder();
+      if($itemType == SLIDEATLAS_DICED_IMAGE)
+        {
+        $metaDataArray = _getSlideatlasMetaData($regularItem->getKey());
+        $accessibleItemArray['levels'] = $metaDataArray['levels'];
+        $accessibleItemArray['tileSize'] = $metaDataArray['tileSize'];
+        }
       array_push($returnSlideatlasItems, $accessibleItemArray);
       }
 

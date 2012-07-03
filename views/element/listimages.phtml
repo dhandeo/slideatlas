@@ -20,7 +20,7 @@ PURPOSE.  See the above copyright notices for more information.
     function createImageElement(&$view,$image)
       {
       echo "<div class='feedUserImage'>";
-      echo "<a href='{$view->webroot}/slideatlas/user/fullscreen?image={$image['name']}&levels=6&tileSize=256'>";
+      echo "<a href='{$view->webroot}/slideatlas/user/fullscreen?image={$image['name']}&levels={$image['levels']}&tileSize={$image['tileSize']}'>";
       echo "<img class='thumbnailHuge' src='{$view->moduleWebroot}/public/images/microscope-huge.png' alt=''/>";
       echo "</a>";
       echo "</div>";
@@ -35,7 +35,7 @@ PURPOSE.  See the above copyright notices for more information.
     }
     
    if(!function_exists('trimFileName'))
-    {  
+    {
     function trimFileName($name)
       {
       if(strlen($name)>35)
