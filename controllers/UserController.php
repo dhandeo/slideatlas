@@ -22,6 +22,8 @@ class Slideatlas_UserController extends Slideatlas_AppController
 {
   public $_models = array('User', 'Item');
   public $_daos = array('User');
+  public $_moduleModels = array('Item');
+  public $_moduleDaos = array('Item');
   public $_moduleComponents = array('Api');
   public $_components = array('Date');
 
@@ -33,6 +35,38 @@ class Slideatlas_UserController extends Slideatlas_AppController
     {
 
     } // end method init
+
+  /**
+   * Get Item Information(Ajax)
+   */
+  function getiteminfoAction()
+    {
+    $this->requireAjaxRequest();
+    $itemId = $this->_getParam('itemId');
+    if(!isset($itemId))
+      {
+      throw new Zend_Exception('itemId parameter required');
+      }
+    $this->disableView();
+    $this->disableLayout();
+
+    $item = $this->Item->load($itemId);
+    $itemname = $item->getName();
+
+    $itemSlideatlas = $this->Slideatlas_Item->getByItemId($itemId);
+    if(is_object($itemSlideatlas) && $itemSlideatlas->getItemType() == SLIDEATLAS_DICED_IMAGE)
+      {
+      $args['useSession'] = true;
+      $args['id'] = $itemId;
+      $attributes = $this->ModuleComponent->Api->getAttributes($args);
+      echo JsonComponent::encode(array('status' => 'ok', 'itemslideatlas' => $itemSlideatlas,
+        'itemname' => $itemname, 'levels' => $attributes['levels'] , 'tilesize' => $attributes['tileSize']));
+      }
+    else
+      {
+      echo JsonComponent::encode(array('status' => 'na'));
+      }
+    }
 
   /** list action*/
   function listAction()

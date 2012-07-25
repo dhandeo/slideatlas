@@ -159,6 +159,7 @@ class Slideatlas_ApiComponent extends AppComponent
   function getAttributes($args)
     {
     $this->_checkKeys(array('id'), $args);
+    $itemId = $args['id'];
 
     $componentLoader = new MIDAS_ComponentLoader();
     $authComponent = $componentLoader->loadComponent('Authentication', 'api');
@@ -168,18 +169,24 @@ class Slideatlas_ApiComponent extends AppComponent
       {
       throw new Zend_Exception('You must be logged in to get item attributes');
       }
-    $this->_checkItemExistence($args['id'], $userDao);
+    $this->_checkItemExistence($itemId, $userDao);
 
     $modelLoader = new MIDAS_ModelLoader();
     $slideatlasItemModel = $modelLoader->loadModel('Item', 'slideatlas');
-    $slideatlasItem = $slideatlasItemModel->getByItemId($args['id']);
+    $slideatlasItem = $slideatlasItemModel->getByItemId($itemId);
     if($slideatlasItem == false)
       {
       throw new Exception("This item is not a slideatlas item.", MIDAS_INVALID_POLICY);
       }
     $slideatlasItemArray = $slideatlasItem->toArray();
+    if($slideatlasItemArray['item_type'] == SLIDEATLAS_DICED_IMAGE)
+      {
+      $metaDataArray = $this->_getSlideatlasMetaData($itemId);
+      $slideatlasItemArray['levels'] = $metaDataArray['levels'];
+      $slideatlasItemArray['tileSize'] = $metaDataArray['tileSize'];
+      }
 
-    return $slideatlasItem->toArray();
+    return $slideatlasItemArray;
     }
 
   /**

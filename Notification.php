@@ -25,9 +25,10 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     $fc = Zend_Controller_Front::getInstance();
     $this->moduleWebroot = $fc->getBaseUrl().'/modules/'.$this->moduleName;
     $this->coreWebroot = $fc->getBaseUrl().'/core';
-    
+
     $this->addCallBack('CALLBACK_CORE_ITEM_DELETED', 'handleItemDeleted');
     $this->addCallBack('CALLBACK_CORE_GET_USER_ACTIONS', 'getUserAction');
+    $this->addCallBack('CALLBACK_CORE_ITEM_VIEW_JS', 'getJs');
     $this->addCallBack('CALLBACK_CORE_GET_FOOTER_HEADER', 'getHeader');
     $this->addCallBack('CALLBACK_CORE_LAYOUT_TOPBUTTONS', 'getButton');
     
@@ -60,7 +61,13 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     return array($this->t('Slide Atlas') => 
                  array("url" => $moduleWebroot.'/user/list', "image" => $moduleFileroot.'/public/images/microscope.png') );
     }      
-  
+
+  /** Get javascript for the item view */
+  public function getJs($params)
+    {
+    return array($this->moduleWebroot.'/public/js/user/user.item.view.js');
+    }
+
   /** get layout header */
   public function getHeader()
     {
