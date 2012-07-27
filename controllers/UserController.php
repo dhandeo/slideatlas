@@ -184,5 +184,6 @@ class Slideatlas_UserController extends Slideatlas_AppController
 
     $this->view->image = $this->_getParam("image");
     $this->view->name = $this->_getParam("name");
+    //session_write_close();
     }
 }//end class

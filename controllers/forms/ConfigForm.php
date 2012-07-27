@@ -42,5 +42,28 @@ class Slideatlas_ConfigForm extends AppForm
     return $form;
     }
 
+  /** create imageformat form */
+  public function createImageFormatForm()
+    {
+    $form = new Zend_Form;
+
+    $form->setAction($this->webroot.'/slideatlas/config/index')
+          ->setMethod('post');
+
+    $allFormats = new Zend_Form_Element_Radio('supportAll');
+    $allFormats->addMultiOptions(array(
+                 MIDAS_SLIDEATLAS_ALL_FORMATS => $this->t("Yes, all items need to be processed."),
+                 MIDAS_SLIDEATLAS_NOT_ALL_FORMATS=> $this->t("No, only process items in supported image formats."),
+                  ))
+            ->setRequired(true)
+            ->setValue(MIDAS_SLIDEATLAS_NOT_ALL_FORMATS);
+    $imageFormats = new Zend_Form_Element_Text('imageFormats');
+    $submit = new  Zend_Form_Element_Submit('submitImageFormats');
+    $submit ->setLabel('Save Image Format Configuration');
+
+    $form->addElements(array($allFormats, $imageFormats, $submit));
+    return $form;
+    }
+
 } // end class
 ?>
