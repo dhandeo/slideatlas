@@ -60,7 +60,7 @@ class Slideatlas_UserController extends Slideatlas_AppController
       $args['id'] = $itemId;
       $attributes = $this->ModuleComponent->Api->getAttributes($args);
       echo JsonComponent::encode(array('status' => 'ok', 'itemslideatlas' => $itemSlideatlas,
-        'itemname' => $itemname, 'levels' => $attributes['levels'] , 'tilesize' => $attributes['tileSize']));
+        'itemname' => $itemname, 'levels' => $attributes['levels'], 'tilesize' => $attributes['tileSize']));
       }
     else
       {

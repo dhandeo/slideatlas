@@ -10,12 +10,8 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE.  See the above copyright notices for more information.
 =========================================================================*/
 
-echo '<script type="text/javascript" src="' . $this->coreWebroot . '/public/js/common/common.browser.js"></script>';
-echo '<script type="text/javascript" src="' . $this->coreWebroot . '/public/js/browse/browse.selectfolder.js"></script>';
+echo '<script type="text/javascript" src="' . $this->moduleWebroot . '/public/js/config/config.selectcommunity.js"></script>';
 ?>
-
-<link type="text/css" rel="stylesheet" href="<?php echo $this->coreWebroot?>/public/css/common/common.browser.css" />
-<link type="text/css" rel="stylesheet" href="<?php echo $this->coreWebroot?>/public/css/browse/browse.selectfolder.css" />
 
   <h4><?php echo $this->t('Please select a community.')?></h4>
   <img class="tableLoading" alt="" src="<?php echo $this->coreWebroot?>/public/images/icons/loading.gif"/>
@@ -26,15 +22,17 @@ echo '<script type="text/javascript" src="' . $this->coreWebroot . '/public/js/b
       <tbody>
         <?php
         $node = 1;
-
-       foreach($this->communities as $community)
-        {
-        echo "<tr id='node--$node' class='' type='community' element='{$community->getCommunityId()}' >";
-        echo "  <td class='treeBrowseElement'><span class='community'>{$community->getName()}</span></td>";
-        echo "</tr>";
-        $node++;
-        }
-        
+        if(empty($this->communities))
+          {
+          echo "No community is available to be added to the list ";
+          }
+        foreach($this->communities as $community)
+          {
+          echo "<tr id='node--$node' class='' type='community' element='{$community->getCommunityId()}' >";
+          echo "  <td class='treeBrowseElement'><span class='community'>{$community->getName()}</span></td>";
+          echo "</tr>";
+          $node++;
+          }
         ?>
       </tbody>
     </table>
@@ -42,11 +40,8 @@ echo '<script type="text/javascript" src="' . $this->coreWebroot . '/public/js/b
   </div>
   <br/>
 
-  <form class="genericForm" type='post' action="<?php echo $this->webroot?>/browse/selectitem">
-    <input type='hidden' name='elements' value='<?php echo $this->folderIds?>;<?php echo $this->itemIds?>' />
+  <form class="genericForm">
     <input type='hidden' id="selectedDestinationHidden" name='destination' />
-    Destination: <span id="selectedDestination" > <?php echo $this->t('Please select a community.') ?> </span> <br/>
+    Selected community: <span id="selectedDestination" > <?php echo $this->t('Please select a community.') ?> </span> <br/>
     <input type="submit" disabled  name='selectElements' id='selectElements'  value="<?php echo $this->t('Select')?>"/>
   </form>
-
-  <input id="defaultPolicy" type="hidden" value="<?php echo $this->policy?>"/>

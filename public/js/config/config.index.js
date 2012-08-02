@@ -44,6 +44,35 @@ midas.slideatlas.config.initSupportedFormats = function () {
     });
 }
 
+midas.communitySelectionCallback = function(communityName, communityId)
+  {
+    if(communityName != '' && communityId != '')
+      { 
+      $.post(json.global.webroot+'/slideatlas/config', { element: communityId, addCommunity: true});
+      var newRow = '';
+      newRow += '<tr>';
+      newRow += '  <td>';
+      newRow += '<a href="'+json.global.webroot+'/community/'+communityId+'">'+communityName;
+      newRow += '</a> </td>';
+      newRow += '  <td><span style="float: left;">'+" "+'</span>';
+      newRow +=  '<span class="manageCommunity">';
+      newRow +=  '<a href="javascript:;" element="'+communityId+'" class="communityDeleteLink"><img alt="" src="'+json.global.coreWebroot+'/public/images/icons/close.png" /></a>';
+      newRow +=  '</span>';
+      newRow +=  '  </td>';
+      newRow +=  '</tr>';
+      }
+      
+    if($("#communityTable > tbody > tr:last").length > 0) 
+      {
+      $(newRow).insertAfter("#communityTable > tbody > tr:last");
+      } 
+      else 
+      {
+      $(newRow).appendTo("#communityTable > tbody");
+      }
+    return;
+};
+
 $(document).ready(function() {
     midas.slideatlas.config.initSupportedFormats();  
     $('#configForm').ajaxForm({
@@ -55,6 +84,7 @@ $(document).ready(function() {
         success: midas.slideatlas.config.successConfig
     });
     
+    
     $('a.communityDeleteLink img').fadeTo('fast', 0.4);
     $('a.communityDeleteLink img').hover(function() {
         $(this).fadeTo('fast', 1.0);
@@ -62,7 +92,13 @@ $(document).ready(function() {
     function() {
         $(this).fadeTo('fast', 0.4);
     });
-    $('a.communityDeleteLink').click(function () {
+    
+    $('a.addCommunityLink').click(function () {
+        midas.loadDialog("selectcommunity","/slideatlas/config/selectcommunity");
+        midas.showDialog('Browse for adding a community to slide atlas community list');
+    });
+    
+        $('a.communityDeleteLink').click(function () {
         var communityCell = $(this).parents('tr');
         var communityId = $(this).attr('element');
         var html = '';
@@ -83,8 +119,6 @@ $(document).ready(function() {
             $( "div.MainDialog" ).dialog('close');
         });
     });
-    $('a.addCommunityLink').click(function () {
-        midas.loadDialog("selectcommunity","/slideatlas/config/selectcommunity");
-        midas.showDialog('Browse for adding a community to slide atlas community list');
-    });
+
+    
 });

@@ -53,7 +53,7 @@ class Slideatlas_ConfigForm extends AppForm
     $allFormats = new Zend_Form_Element_Radio('supportAll');
     $allFormats->addMultiOptions(array(
                  MIDAS_SLIDEATLAS_ALL_FORMATS => $this->t("Yes, all items need to be processed."),
-                 MIDAS_SLIDEATLAS_NOT_ALL_FORMATS=> $this->t("No, only process items in supported image formats."),
+                 MIDAS_SLIDEATLAS_NOT_ALL_FORMATS => $this->t("No, only process items in supported image formats."),
                   ))
             ->setRequired(true)
             ->setValue(MIDAS_SLIDEATLAS_NOT_ALL_FORMATS);

@@ -22,7 +22,7 @@
  * Slideatlas module configuration
  */
 class Slideatlas_ConfigController extends Slideatlas_AppController
-{ 
+{
   public $_models = array('Community');
   public $_moduleModels = array('Community');
   public $_daos = array('Community');
@@ -54,7 +54,7 @@ class Slideatlas_ConfigController extends Slideatlas_AppController
     $imageFormatFormArray['supportAll']->setValue($applicationConfig['global']['supportAll']);
     $imageFormatFormArray['imageFormats']->setValue($applicationConfig['global']['imageFormats']);
     $this->view->imageFormatForm = $imageFormatFormArray;
-    
+
     if($this->_request->isPost())
       {
       $this->_helper->layout->disableLayout();
@@ -64,13 +64,22 @@ class Slideatlas_ConfigController extends Slideatlas_AppController
       if(isset($deleteCommunity) && !empty($deleteCommunity)) //delete a community from list
         {
         $communityId = $this->_getParam('element');
-        
+
         $SlideatalsCommunityDao = $this->Slideatlas_Community->getByCommunityId($communityId);
         if($SlideatalsCommunityDao === false)
-        {
-        throw new Zend_Exception("This community is not in the slideatls community list.");
-        }
+          {
+          throw new Zend_Exception("This community is not in the slideatls community list.");
+          }
         $this->Slideatlas_Community->delete($SlideatalsCommunityDao);
+        }
+
+      $addCommunity = $this->_getParam('addCommunity');
+      if(isset($addCommunity) && !empty($addCommunity)) //add a community to list
+        {
+        $communityId = $this->_getParam('element');
+        $slideatlasCommunityDao = new Slideatlas_CommunityDao();
+        $slideatlasCommunityDao->setCommunityId($communityId);
+        $this->Slideatlas_Community->save($slideatlasCommunityDao);
         echo JsonComponent::encode(array(true, 'Changes saved'));
         }
 
@@ -100,19 +109,19 @@ class Slideatlas_ConfigController extends Slideatlas_AppController
         echo JsonComponent::encode(array(true, 'Changes saved'));
         }
       }
-    
+
     $communities = array();
     $slideatlasCommunityDaos = $this->Slideatlas_Community->getAll();
     foreach($slideatlasCommunityDaos as $slideatlasCommunity)
       {
-      array_push($communities, $this->Community->load($slideatlasCommunity->getCommunityId() ) );   
+      array_push($communities, $this->Community->load($slideatlasCommunity->getCommunityId() ) );
       }
     $this->view->communities = $communities;
- 
+
     $this->view->json['message']['delete'] = $this->t('Delete');
     $this->view->json['message']['deleteCommunityMessage'] = $this->t('Do you really want to delete this community from the slide atlas community list?');
     }
-    
+
   /** Ajax element used to select a community*/
   public function selectcommunityAction()
     {
@@ -123,7 +132,7 @@ class Slideatlas_ConfigController extends Slideatlas_AppController
     $slideatlasCommunityIDs = array();
     foreach($slideatlasCommunityDaos as $slideatlasCommunity)
       {
-      array_push($slideatlasCommunityIDs, $slideatlasCommunity->getCommunityId()); 
+      array_push($slideatlasCommunityIDs, $slideatlasCommunity->getCommunityId());
       }
     $communities = array();
     foreach($allCommunities as $community)
@@ -134,8 +143,6 @@ class Slideatlas_ConfigController extends Slideatlas_AppController
         }
       }
     $this->view->communities = $communities;
-    $this->view->selectEnabled = true;
     }
-    
 
 }//end class
