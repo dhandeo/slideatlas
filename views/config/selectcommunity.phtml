@@ -1,0 +1,47 @@
+<?php
+/*=========================================================================
+MIDAS Server
+Copyright (c) Kitware SAS. 20 rue de la Villette. All rights reserved.
+69328 Lyon, FRANCE.
+
+See Copyright.txt for details.
+This software is distributed WITHOUT ANY WARRANTY; without even
+the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.  See the above copyright notices for more information.
+=========================================================================*/
+
+echo '<script type="text/javascript" src="' . $this->moduleWebroot . '/public/js/config/config.selectcommunity.js"></script>';
+?>
+
+  <h4><?php echo $this->t('Please select a community.')?></h4>
+  <img class="tableLoading" alt="" src="<?php echo $this->coreWebroot?>/public/images/icons/loading.gif"/>
+  <div id="browserWrapper" >
+    <table id="moveTable" class="midasTree">
+      <thead>
+      </thead>
+      <tbody>
+        <?php
+        $node = 1;
+        if(empty($this->communities))
+          {
+          echo "No community is available to be added to the list ";
+          }
+        foreach($this->communities as $community)
+          {
+          echo "<tr id='node--$node' class='' type='community' element='{$community->getCommunityId()}' >";
+          echo "  <td class='treeBrowseElement'><span class='community'>{$community->getName()}</span></td>";
+          echo "</tr>";
+          $node++;
+          }
+        ?>
+      </tbody>
+    </table>
+
+  </div>
+  <br/>
+
+  <form class="genericForm">
+    <input type='hidden' id="selectedDestinationHidden" name='destination' />
+    Selected community: <span id="selectedDestination" > <?php echo $this->t('Please select a community.') ?> </span> <br/>
+    <input type="submit" disabled  name='selectElements' id='selectElements'  value="<?php echo $this->t('Select')?>"/>
+  </form>

@@ -26,7 +26,8 @@ $this->headScript()->appendFile($this->moduleWebroot . '/public/js/config/config
           
         ?>
     </div>
-  
+
+    <div class="mongoDBconfig">
     This module requires Mongo Database (Mongo DB) installed locally or remotely.<br/>
     To install it: <a href="http://www.mongodb.org/" target='_blank'>http://www.mongodb.org/</a><br/>
      <?php
@@ -47,11 +48,73 @@ $this->headScript()->appendFile($this->moduleWebroot . '/public/js/config/config
           </div>
        </form>";
        ?>
+    </div>
+
+    <br/>
+    <div class="slideatlasCommunity">
+    <h3>Slide Atlas Communities:</h3>
+      <?php
+        echo
+       "<div class='addSlideatalsCommunity'>
+          <a href='javascript:;' class='addCommunityLink' ><img alt='' src='{$this->coreWebroot}/public/images/icons/add.png'/> {$this->t('Add a community')}</a>
+        </div>
+        <br/>";
+        if(count($this->communities) == 0)
+          {
+          echo "No community is marked as slide atlas community.";
+          }
+        else
+          {
+      ?>
+      
+          <table style='display:block;' id="communityTable" class="communityList">
+            <thead>
+              <tr>
+                <th class="name"><?php echo $this->t('Name');?></th>
+                <th><?php echo $this->t('Description');?></th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              foreach($this->communities as $community)
+                {
+                echo '<tr>';
+                echo '  <td>';
+                echo "<a href='{$this->webroot}/community/{$community->getKey()}'>{$community->getName()}";
+                echo '</a> </td>';
+                echo '  <td><span style="float: left;">'.$community->getDescription().'</span>';
+                echo "<span class='manageCommunity'>";
+                echo "<a href='javascript:;' element='".$community->getKey()."' class='communityDeleteLink'><img alt='' src='{$this->coreWebroot}/public/images/icons/close.png'/></a>";
+                echo "</span>";
+                echo "  </td>";
+                echo "</tr>";
+                }
+              ?>
+            </tbody>
+          </table>
+          <?php
+          }
+          ?> 
+    </br>
+    <div class="slideatlasImageFormats">
+     <?php
+      echo "
+      <form class='genericForm' id='imageformatsForm' method='{$this->imageFormatForm['method']}'  action='{$this->imageFormatForm['action']}'>
+      <h3>Image Format Configuration:</h3>
+          <div class='radioElement'>
+            <h4><label for='allFormats'>Do all the items (in above slide atlas communities) need to be processed by image dicer?</label></h4>
+            {$this->imageFormatForm['supportAll']}
+          </div>
+          <div id='imageformatsDiv'>
+            <h4><label for='imageFormats'>Supported Image formats (comma seperated)</label><h4>
+            {$this->imageFormatForm['imageFormats']}
+          </div>
+          <div>
+            {$this->imageFormatForm['submitImageFormats']}
+          </div>
+       </form>";
+       ?>
+    </div>
 
 </div>
-
-
-
-
-
 

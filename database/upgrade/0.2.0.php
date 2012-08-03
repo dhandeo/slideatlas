@@ -18,9 +18,36 @@
  limitations under the License.
 =========================================================================*/
 
-define("SLIDEATLAS_RAW_IMAGE", 1);
-define("SLIDEATLAS_DICED_IMAGE", 2);
+class Slideatlas_Upgrade_0_2_0 extends MIDASUpgrade
+{
+  public function preUpgrade()
+    {
 
-define ("MIDAS_SLIDEATLAS_ALL_FORMATS", 1);
-define ("MIDAS_SLIDEATLAS_NOT_ALL_FORMATS", 0);
+    }
+
+  public function mysql()
+    {
+    $tableCreate =
+    "CREATE TABLE IF NOT EXISTS `slideatlas_community` (" .
+    "`slideatlas_community_id` bigint(20) NOT NULL AUTO_INCREMENT," .
+    "`community_id` bigint(20) NOT NULL," .
+    "PRIMARY KEY (`slideatlas_community_id`)" .
+    ")   DEFAULT CHARSET=utf8;";
+    $this->db->query($tableCreate);
+    }
+
+  public function pgsql()
+    {
+    $tableCreate =
+    "CREATE TABLE slideatlas_community (" .
+    "slideatlas_community_id serial PRIMARY KEY," .
+    "community_id bigint NOT NULL);";
+    $this->db->query($tableCreate);
+    }
+
+  public function postUpgrade()
+    {
+
+    }
+}
 ?>

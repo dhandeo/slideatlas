@@ -25,7 +25,7 @@ PURPOSE.  See the above copyright notices for more information.
       echo "</a>";
       echo "</div>";
       echo "<div class='imageInfo'>";
-      echo " <a href='{$view->webroot}/item/{$image['item_id']}'>".trimFileName($image['name'])."</a>";
+      echo " <a href='{$view->webroot}/slideatlas/user/fullscreen?image={$image['name']}&levels={$image['levels']}&tileSize={$image['tileSize']}'>".trimFileName($image['name'])."</a>";
       echo "</div>";
       echo "<div class='imageDate'>";
       echo  $view->Dateago(strtotime($image['date_update']));
