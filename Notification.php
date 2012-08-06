@@ -14,9 +14,11 @@ require_once BASE_PATH . '/modules/api/library/APIEnabledNotification.php';
 
 class Slideatlas_Notification extends ApiEnabled_Notification
   {
+  public $_models = array('Item', 'Community', 'Folder');
   public $moduleName = 'slideatlas';
   public $_moduleComponents = array('Api');
-  public $_models=array();
+  public $_moduleModels = array('Community', 'Item');
+  public $_moduleDaos = array('Community');
 
   /** init notification process*/
   public function init()
@@ -25,13 +27,15 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     $fc = Zend_Controller_Front::getInstance();
     $this->moduleWebroot = $fc->getBaseUrl().'/modules/'.$this->moduleName;
     $this->coreWebroot = $fc->getBaseUrl().'/core';
-
+    
     $this->addCallBack('CALLBACK_CORE_ITEM_DELETED', 'handleItemDeleted');
     $this->addCallBack('CALLBACK_CORE_GET_USER_ACTIONS', 'getUserAction');
     $this->addCallBack('CALLBACK_CORE_ITEM_VIEW_JS', 'getJs');
     $this->addCallBack('CALLBACK_CORE_GET_FOOTER_HEADER', 'getHeader');
     $this->addCallBack('CALLBACK_CORE_LAYOUT_TOPBUTTONS', 'getButton');
     
+    $this->addTask("TASK_MARK_SLIDEATLAS_RAW_ITEM", 'markRawItem', "Mark an item as to-be-processed slide atlas item. Parameters: Item, Revision");
+    $this->addEvent('EVENT_CORE_UPLOAD_FILE', 'TASK_MARK_SLIDEATLAS_RAW_ITEM');
     }//end init
 
   /**
@@ -39,9 +43,7 @@ class Slideatlas_Notification extends ApiEnabled_Notification
    */
   public function handleItemDeleted($params)
     {
-    $modelLoader = new MIDAS_ModelLoader();
-    $slideatlasItemModel = $modelLoader->loadModel('Item', $this->moduleName);
-    $slideatlasItem = $slideatlasItemModel->getByItemId($params['item']);
+    $slideatlasItem = $this->Slideatlas_Item->getByItemId($params['item']->getKey());
     if($slideatlasItem)
       {
       $slideatlasItemModel->delete($slideatlasItem);
@@ -97,6 +99,66 @@ class Slideatlas_Notification extends ApiEnabled_Notification
       }
     }
     
+  /** Mark an item as to-be-processed slide atlas item*/
+  public function markRawItem($params)
+    {
+    $itemParam = $params[0];
+    $item = $this->Item->load($itemParam['item_id']);
+   
+    $revisionCount = count($item->getRevisions());
+    // only process the initial revision
+    if(($revisionCount == 0) || ($revisionCount > 1))
+      {
+      return;
+      }
+    
+    //check if the item is in the slide atlas communities
+    $slideatlasCommunityRootFolders = array();
+    $itemCommunityRootFolders = array();
+    foreach($this->Slideatlas_Community->getAll() as $slideatlasCommunity)
+      {
+      $community = $this->Community->load($slideatlasCommunity->getCommunityId());
+      array_push($slideatlasCommunityRootFolders, $community->getFolderId());
+      }
+    foreach($item->getFolders() as $parentFolder)
+      {
+      $folderId = $parentFolder->getKey();
+      $folder = $this->Folder->load($folderId);
+      $rootFolder = $this->Folder->getRoot($folder);
+      array_push($itemCommunityRootFolders, $rootFolder->getKey());
+      }
+    $inSlideatlasCommunity = array_intersect($slideatlasCommunityRootFolders, $itemCommunityRootFolders);
+    if(empty($inSlideatlasCommunity))
+      {
+      return;
+      }
+
+    // check if the item format is not supported by image dicer  
+    if(file_exists(BASE_PATH."/core/configs/".$this->moduleName.".local.ini"))
+      {
+      $applicationConfig = parse_ini_file(BASE_PATH."/core/configs/".$this->moduleName.".local.ini", true);
+      }
+    else
+      {
+      $applicationConfig = parse_ini_file(BASE_PATH.'/modules/'.$this->moduleName.'/configs/module.ini', true);
+      }
+    $supportAll = $applicationConfig['global']['supportAll'];
+    $imageFormats = explode(',', $applicationConfig['global']['imageFormats']);
+    array_walk($imageFormats, create_function('&$val', '$val = trim($val);'));
+    $itemFormat = end(explode('.', $item->getName()));
+    if((intval($supportAll) == MIDAS_SLIDEATLAS_NOT_ALL_FORMATS) && (!in_array($itemFormat, $imageFormats)) )
+      {
+      return;
+      }
+    // mark item as to-be-processed
+    $args['useSession'] = true;
+    $args['id'] = $item->getKey();
+    $args['type'] = 'raw';
+    $this->ModuleComponent->Api->markItem($args);  
+ 
+    return;
+    }
+
 } //end class
   
 ?>
