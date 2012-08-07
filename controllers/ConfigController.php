@@ -102,8 +102,12 @@ class Slideatlas_ConfigController extends Slideatlas_AppController
           }
         if(isset($submitImageFormats))
           {
-          $applicationConfig['global']['supportAll'] = $this->_getParam('allFormats');
-          $applicationConfig['global']['imageFormats'] = $this->_getParam('imageFormats');
+          $applicationConfig['global']['supportAll'] = $this->_getParam('supportAll');
+          // Still keep previous image formats list in the configuration file if "all formats" option is chosen.
+          if(intval($applicationConfig['global']['supportAll']) == MIDAS_SLIDEATLAS_NOT_ALL_FORMATS)
+            {
+            $applicationConfig['global']['imageFormats'] = $this->_getParam('imageFormats');
+            }
           }
         $this->Component->Utility->createInitFile(BASE_PATH."/core/configs/".$this->moduleName.".local.ini", $applicationConfig);
         echo JsonComponent::encode(array(true, 'Changes saved'));
