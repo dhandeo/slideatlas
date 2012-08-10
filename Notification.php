@@ -32,10 +32,9 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     $this->addCallBack('CALLBACK_CORE_GET_USER_ACTIONS', 'getUserAction');
     $this->addCallBack('CALLBACK_CORE_ITEM_VIEW_JS', 'getJs');
     $this->addCallBack('CALLBACK_CORE_GET_FOOTER_HEADER', 'getHeader');
-    $this->addCallBack('CALLBACK_CORE_LAYOUT_TOPBUTTONS', 'getButton');
+    //$this->addCallBack('CALLBACK_CORE_LAYOUT_TOPBUTTONS', 'getButton');
     
-    $this->addTask("TASK_MARK_SLIDEATLAS_RAW_ITEM", 'markRawItem', "Mark an item as to-be-processed slide atlas item. Parameters: Item, Revision");
-    $this->addEvent('EVENT_CORE_UPLOAD_FILE', 'TASK_MARK_SLIDEATLAS_RAW_ITEM');
+    $this->addCallBack('CALLBACK_CORE_UPLOAD_FILE', 'markRawItem');
     }//end init
 
   /**
@@ -46,7 +45,7 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     $slideatlasItem = $this->Slideatlas_Item->getByItemId($params['item']->getKey());
     if($slideatlasItem)
       {
-      $slideatlasItemModel->delete($slideatlasItem);
+      $this->Slideatlas_Item->delete($slideatlasItem);
       }
     }
 
