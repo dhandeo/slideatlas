@@ -1,32 +1,54 @@
-$(document).ready(function () {
-    midas.registerCallback('CALLBACK_UPDATE_BIG_THUMBNAIL', 'slideatlas', function(args) {
-    // get parameters
-    $.get(json.global.webroot+'/slideatlas/user/getiteminfo', {
-        itemId: args.item_id
-        }, function(data) {
-            var resp = $.parseJSON(data);
-            if(resp.status == 'ok') {
-                // add an anchor
-                var html = json.global.webroot+'/slideatlas/user/fullscreen?image='
-                   + resp.itemname +'&levels='+ resp.levels+'&tileSize='+ resp.tilesize;
-                $('img.largeImage').wrap($('<a id="popup">').attr('href', html));
-                // use a pop-up window 
-                $('a#popup').qtip({
-                    content: 'Click to view the whole image',
+var midas = midas || {};
+midas.slideatlas = midas.slideatlas || {};
+midas.slideatlas.user = midas.slideatlas.user || {};
+
+/**
+ * Call this to display the large image viewer section on the item
+ */
+midas.slideatlas.user.displayviewer = function(url) {
+    'use strict';
+    $('#slideatlasViewerSection').find('a')
+       .attr('href', url);
+    $('a#popup').qtip({
+                    content: 'Click to view the image in a big pop-up window',
                     position: {
                         target: 'mouse',
                         my: 'bottom left',
                         viewport: $(window), // Keep the qtip on-screen at all times
                         effect: true // Disable positioning animation
-                   }
-                }).click(function() {
-	                  var NWin = window.open($(this).prop('href'), '', 'height=800,width=1200');
-	                  if(window.focus) {
-	                      NWin.focus();
-	                      }
-	                  return false;
-	                  });  
+                    }
+    }).click(function(){
+       var NWin = window.open($(this).prop('href'), '', 'height=1000, width=1200');
+       if(window.focus){
+          NWin.focus();
+          }
+        return false;
+       });
+    $('#slideatlasViewerSection').show()
+      .find('iframe')
+      .attr('src', url);
+}
+
+midas.slideatlas.user.viewersetup = function(item_id) {
+    'use strict';
+    // Hide the thumbnailcreatorLargeImageSection
+    $('#thumbnailcreatorLargeImageSection').hide()
+     .parent()
+     .attr('class', 'disableitemViewMainSection');
+       
+    $.get(json.global.webroot+'/slideatlas/user/getiteminfo', {
+        itemId: item_id
+        }, function(data) {
+            var resp = $.parseJSON(data);
+            if(resp.status == 'ok') {
+                var html = json.global.webroot+'/slideatlas/user/fullscreen?image='
+                   + resp.itemname +'&levels='+ resp.levels+'&tileSize='+ resp.tilesize;
+            midas.slideatlas.user.displayviewer(html);
             }
         });
-    });
+}
+
+$(window).load(function () {
+    midas.slideatlas.user.viewersetup(json.item.item_id);
+
 });
