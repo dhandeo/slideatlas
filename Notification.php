@@ -27,13 +27,14 @@ class Slideatlas_Notification extends ApiEnabled_Notification
     $fc = Zend_Controller_Front::getInstance();
     $this->moduleWebroot = $fc->getBaseUrl().'/modules/'.$this->moduleName;
     $this->coreWebroot = $fc->getBaseUrl().'/core';
-    
+
     $this->addCallBack('CALLBACK_CORE_ITEM_DELETED', 'handleItemDeleted');
     $this->addCallBack('CALLBACK_CORE_GET_USER_ACTIONS', 'getUserAction');
     $this->addCallBack('CALLBACK_CORE_ITEM_VIEW_JS', 'getJs');
+    $this->addCallBack('CALLBACK_CORE_ITEM_VIEW_PREPEND_ELEMENTS', 'getItemElement');
     $this->addCallBack('CALLBACK_CORE_GET_FOOTER_HEADER', 'getHeader');
     //$this->addCallBack('CALLBACK_CORE_LAYOUT_TOPBUTTONS', 'getButton');
-    
+
     $this->addCallBack('CALLBACK_CORE_UPLOAD_FILE', 'markRawItem');
     }//end init
 
@@ -97,7 +98,13 @@ class Slideatlas_Notification extends ApiEnabled_Notification
       return $html;
       }
     }
-    
+
+  /** Get the module's phtml element for the item view */
+  public function getItemElement($params)
+    {
+    return array('itemview');
+    }
+
   /** Mark an item as to-be-processed slide atlas item*/
   public function markRawItem($params)
     {
