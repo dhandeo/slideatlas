@@ -66,10 +66,10 @@ $(document).ready(function() {
   mapcontainer.keydown(function(event){
        switch(event.keyCode){
          case 82: 
-						rotate(5);
+						mapdiv.animate({rotate: '+=5deg'}, 0);
 						break;
          case 76: 
-						rotate(-5);
+						mapdiv.animate({rotate: '-=5deg'}, 0);
 						break;
          case 40: map.panDirection(0,-1); break;
          case 38: map.panDirection(0,1); break;
@@ -130,7 +130,7 @@ midas.slideatlas.user.getMyUrl = function(bounds){
 				}
 			}
 //      var some = "http://paraviewweb.kitware.com:82/tile.py/" + baseName + "/" + imageName + "/" + tileName+".jpg";
-      var some = "chunk?image=" + imageName + "&name=" + tileName+".jpg";
+      var some = "chunk?image=" + imageName + "&name=" + tileName + ".jpg" + "&tileSize=" + tileSize;
 	return some
   }
   
@@ -146,7 +146,7 @@ midas.slideatlas.user.zoom2 = function(num)
 		}
   }
 
-midas.slideatlas.user.rotate = function(num)
+midas.slideatlas.user.rotate2 = function(num)
   {
   var stri = "+=" + num + 'deg';
 	if (num < 0)

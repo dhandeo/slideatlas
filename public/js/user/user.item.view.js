@@ -8,7 +8,7 @@ midas.slideatlas.user = midas.slideatlas.user || {};
 midas.slideatlas.user.displayviewer = function(url) {
     'use strict';
     $('#slideatlasViewerSection').find('a')
-       .attr('href', url);
+      .attr('href', url);
     $('a#popup').qtip({
                     content: 'Click to view the image in a big pop-up window',
                     position: {
@@ -32,10 +32,13 @@ midas.slideatlas.user.displayviewer = function(url) {
 midas.slideatlas.user.viewersetup = function(item_id) {
     'use strict';
     // Hide the thumbnailcreatorLargeImageSection
-    $('#thumbnailcreatorLargeImageSection').hide()
-     .parent()
-     .attr('class', 'disableitemViewMainSection');
-       
+    if($('#thumbnailcreatorLargeImageSection').length > 0 )
+      {
+      $('#thumbnailcreatorLargeImageSection').hide()
+        .parent()
+        .attr('class', 'disableitemViewMainSection');    
+      }
+
     $.get(json.global.webroot+'/slideatlas/user/getiteminfo', {
         itemId: item_id
         }, function(data) {
@@ -45,6 +48,16 @@ midas.slideatlas.user.viewersetup = function(item_id) {
                    + resp.itemname +'&levels='+ resp.levels+'&tileSize='+ resp.tilesize;
             midas.slideatlas.user.displayviewer(html);
             }
+            else
+              {
+               // Show the thumbnailcreatorLargeImageSection
+               if($('#thumbnailcreatorLargeImageSection').length > 0 )
+                {
+                $('#thumbnailcreatorLargeImageSection').show()
+                  .parent()
+                  .attr('class', 'itemViewMainSection');  
+               }  
+              }
         });
 }
 

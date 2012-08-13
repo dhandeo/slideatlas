@@ -145,6 +145,7 @@ class Slideatlas_UserController extends Slideatlas_AppController
       }
 
     $this->view->user = $userDao;
+    $this->view->title = $this->_getParam("image");
     $this->view->json['slideatlas']['imageName'] = $this->_getParam("image");
     $this->view->json['slideatlas']['zoomLevels'] = $this->_getParam("levels");
     $this->view->json['slideatlas']['tileSize'] = $this->_getParam("tileSize");
@@ -184,6 +185,7 @@ class Slideatlas_UserController extends Slideatlas_AppController
 
     $this->view->image = $this->_getParam("image");
     $this->view->name = $this->_getParam("name");
+    $this->view->tileSize = $this->_getParam("tileSize");
     //session_write_close();
     }
 }//end class
