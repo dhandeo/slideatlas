@@ -16,17 +16,27 @@ echo $this->doctype();
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>  
-  <title> Rotated full screen digital pathology view </title>
+  <title> <?php echo $this->title ?> </title>
   <link type="text/css" rel="stylesheet" href="<?php echo $this->moduleWebroot?>/public/css/user/user.fullscreen.css" />
 </head>
 
 <body >  
   <div id="mapcontainer">
     <div id="map"></div>
-		<div id="plus" class='button' onclick="midas.slideatlas.user.zoom2(1);"> Zoom In </div>
-		<div id="minus" class='button' onclick="midas.slideatlas.user.zoom2(-1);"> Zoom Out </div>
-		<div id="rotatel" class='button' onclick="midas.slideatlas.user.rotate(5);"> Rotate Right </div>
-		<div id="rotater" class='button' onclick="midas.slideatlas.user.rotate(-5);"> Rotate Left </div>
+    <div id="operations">
+		  <div id="plus" class='largeImageButton' onclick="midas.slideatlas.user.zoom2(1);">
+        <img id="uploadAFile" src="<?php echo $this->moduleWebroot?>/public/images/zoom-in.png" alt="zoom in"/>
+      </div>  
+		  <div id="minus" class='largeImageButton' onclick="midas.slideatlas.user.zoom2(-1);">
+        <img id="uploadAFile" src="<?php echo $this->moduleWebroot?>/public/images/zoom-out.png" alt="zoom out"/>
+      </div>
+		  <div id="rotatel" class='largeImageButton' onclick="midas.slideatlas.user.rotate2(5);">
+        <img id="uploadAFile" src="<?php echo $this->moduleWebroot?>/public/images/rotate-right.png" alt="rotate right"/>
+      </div>
+		  <div id="rotater" class='largeImageButton' onclick="midas.slideatlas.user.rotate2(-5);">
+        <img id="uploadAFile" src="<?php echo $this->moduleWebroot?>/public/images/rotate-left.png" alt="rotate left"/>
+      </div>
+    </div>
   </div>
 	
 <div style="display: none;" class="jsonContent">

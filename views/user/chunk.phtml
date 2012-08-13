@@ -11,7 +11,6 @@ PURPOSE.  See the above copyright notices for more information.
 =========================================================================*/
 
 # vim:tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab:e 
-//var_dump($_SESSION['book']);
 # Process the command line parameters
 
 if(file_exists(BASE_PATH."/core/configs/slideatlas.local.ini"))
@@ -25,26 +24,24 @@ else
 $server = $applicationConfig['global']['mongoserver'];
 $database = $applicationConfig['global']['dbname'];
 
-//@$col_name =  $_GET['image'];
-//@$fname =     $_GET['name'];
 
 @$col_name =  $this->image;
 @$fname =     $this->name;
+
 //header('content-type: image/jpeg');
 # Return grey image as there is error or parameters not set
 header('content-type: image/jpeg');
-function grey_out()
+function grey_out($tileSize)
 	{
 	#header('content-type: image/jpeg');
-  
-	$im = file_get_contents(BASE_PATH."/modules/slideatlas/public/images/blank-256.jpg");
+	$im = file_get_contents(BASE_PATH."/modules/slideatlas/public/images/blank-".$tileSize.".jpg");
 	echo $im; 
 	}
 
 # If parameters not available
 if(!isset($col_name) || !isset($fname))
   {
-	grey_out();
+	grey_out($this->tileSize);
 	return;
   }
 try
@@ -65,6 +62,6 @@ try
 	}
 	catch(Exception $e)
 	{
-	grey_out();
+	grey_out($this->tileSize);
 	}
 ?>
