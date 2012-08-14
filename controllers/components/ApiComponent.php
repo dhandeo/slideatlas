@@ -59,7 +59,7 @@ class Slideatlas_ApiComponent extends AppComponent
     foreach($metadata as $m)
       {
       $mArray = $m->toArray();
-      if(($mArray['element'] == 'tileSize') || ($mArray['element'] == 'levels'))
+      if(($mArray['element'] == 'tilesize') || ($mArray['element'] == 'levels'))
         {
         if(array_key_exists($mArray['element'], $metadataArray))
           {
@@ -68,9 +68,9 @@ class Slideatlas_ApiComponent extends AppComponent
         $metadataArray[$mArray['element']] = $mArray['value'];
         }
       }
-    if((!array_key_exists('tileSize', $metadataArray)) || (!array_key_exists('levels', $metadataArray)) )
+    if((!array_key_exists('tilesize', $metadataArray)) || (!array_key_exists('levels', $metadataArray)) )
       {
-      throw new Exception("This item't metada doesn't include levels and/or tileSize.", MIDAS_INVALID_POLICY);
+      throw new Exception("This item't metada doesn't include levels and/or tilesize.", MIDAS_INVALID_POLICY);
       }
 
     return $metadataArray;
@@ -183,7 +183,7 @@ class Slideatlas_ApiComponent extends AppComponent
       {
       $metaDataArray = $this->_getSlideatlasMetaData($itemId);
       $slideatlasItemArray['levels'] = $metaDataArray['levels'];
-      $slideatlasItemArray['tileSize'] = $metaDataArray['tileSize'];
+      $slideatlasItemArray['tilesize'] = $metaDataArray['tilesize'];
       }
 
     return $slideatlasItemArray;
@@ -255,7 +255,7 @@ class Slideatlas_ApiComponent extends AppComponent
           {
           $metaDataArray = $this->_getSlideatlasMetaData($item->getKey());
           $accessibleItemArray['levels'] = $metaDataArray['levels'];
-          $accessibleItemArray['tileSize'] = $metaDataArray['tileSize'];
+          $accessibleItemArray['tilesize'] = $metaDataArray['tilesize'];
           }
         array_push($returnSlideatlasItems, $accessibleItemArray);
         }
@@ -312,7 +312,7 @@ class Slideatlas_ApiComponent extends AppComponent
         {
         $metaDataArray = _getSlideatlasMetaData($regularItem->getKey());
         $accessibleItemArray['levels'] = $metaDataArray['levels'];
-        $accessibleItemArray['tileSize'] = $metaDataArray['tileSize'];
+        $accessibleItemArray['tilesize'] = $metaDataArray['tilesize'];
         }
       array_push($returnSlideatlasItems, $accessibleItemArray);
       }
