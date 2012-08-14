@@ -6,13 +6,13 @@ midas.slideatlas.user = midas.slideatlas.user || {};
 // Default config parameters
 var json = $.parseJSON($('div.jsonContent').html());
 var imageName = json.slideatlas.imageName;
-var tileSize = parseInt(json.slideatlas.tileSize);
+var tilesize = parseInt(json.slideatlas.tilesize);
 var zoomLevels = parseInt(json.slideatlas.zoomLevels);
 $(document).ready(function() {
 	mapcontainer = $('#mapcontainer');
 	mapdiv = $('#map');
 
-	var boundSize = tileSize *  Math.pow(2,zoomLevels-1); 
+	var boundSize = tilesize *  Math.pow(2,zoomLevels-1); 
 	
 	var containwidth = parseFloat($('#mapcontainer').css('width'))
 	var containheight = parseFloat($('#mapcontainer').css('height'))
@@ -38,9 +38,9 @@ $(document).ready(function() {
 					}),
 			],
       maxExtent: new OpenLayers.Bounds(0,0, boundSize, boundSize),
-	    maxResolution: boundSize / tileSize, 
+	    maxResolution: boundSize / tilesize, 
 	    numZoomLevels: zoomLevels, 
-			tileSize: new OpenLayers.Size(tileSize, tileSize),
+			tileSize: new OpenLayers.Size(tilesize, tilesize),
 			mapRotation:0.0
     }
   );
@@ -130,7 +130,7 @@ midas.slideatlas.user.getMyUrl = function(bounds){
 				}
 			}
 //      var some = "http://paraviewweb.kitware.com:82/tile.py/" + baseName + "/" + imageName + "/" + tileName+".jpg";
-      var some = "chunk?image=" + imageName + "&name=" + tileName + ".jpg" + "&tileSize=" + tileSize;
+      var some = "chunk?image=" + imageName + "&name=" + tileName + ".jpg" + "&tilesize=" + tilesize;
 	return some
   }
   

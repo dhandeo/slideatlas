@@ -31,17 +31,17 @@ $database = $applicationConfig['global']['dbname'];
 //header('content-type: image/jpeg');
 # Return grey image as there is error or parameters not set
 header('content-type: image/jpeg');
-function grey_out($tileSize)
+function grey_out($tilesize)
 	{
 	#header('content-type: image/jpeg');
-	$im = file_get_contents(BASE_PATH."/modules/slideatlas/public/images/blank-".$tileSize.".jpg");
+	$im = file_get_contents(BASE_PATH."/modules/slideatlas/public/images/blank-".$tilesize.".jpg");
 	echo $im; 
 	}
 
 # If parameters not available
 if(!isset($col_name) || !isset($fname))
   {
-	grey_out($this->tileSize);
+	grey_out($this->tilesize);
 	return;
   }
 try
@@ -62,6 +62,6 @@ try
 	}
 	catch(Exception $e)
 	{
-	grey_out($this->tileSize);
+	grey_out($this->tilesize);
 	}
 ?>
