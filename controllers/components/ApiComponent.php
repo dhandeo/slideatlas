@@ -59,18 +59,18 @@ class Slideatlas_ApiComponent extends AppComponent
     foreach($metadata as $m)
       {
       $mArray = $m->toArray();
-      if(($mArray['element'] == 'tilesize') || ($mArray['element'] == 'levels'))
+      if((!strnatcasecmp($mArray['element'], 'tilesize')) || (!strnatcasecmp($mArray['element'],'levels')))
         {
-        if(array_key_exists($mArray['element'], $metadataArray))
+        if(array_key_exists(strtolower($mArray['element']), array_change_key_case($metadataArray)))
           {
           throw new Exception("This item has duplicated metadata.", MIDAS_INVALID_POLICY);
           }
         $metadataArray[$mArray['element']] = $mArray['value'];
         }
       }
-    if((!array_key_exists('tilesize', $metadataArray)) || (!array_key_exists('levels', $metadataArray)) )
+    if((!array_key_exists('tilesize', array_change_key_case($metadataArray))) || (!array_key_exists('levels', array_change_key_case($metadataArray))) )
       {
-      throw new Exception("This item't metada doesn't include levels and/or tilesize.", MIDAS_INVALID_POLICY);
+      throw new Exception("This item's metada doesn't include levels and/or tilesize.", MIDAS_INVALID_POLICY);
       }
 
     return $metadataArray;
@@ -182,8 +182,9 @@ class Slideatlas_ApiComponent extends AppComponent
     if($slideatlasItemArray['item_type'] == SLIDEATLAS_DICED_IMAGE)
       {
       $metaDataArray = $this->_getSlideatlasMetaData($itemId);
-      $slideatlasItemArray['levels'] = $metaDataArray['levels'];
-      $slideatlasItemArray['tilesize'] = $metaDataArray['tilesize'];
+      $lowercase_metaDataArray = array_change_key_case($metaDataArray);
+      $slideatlasItemArray['levels'] = $lowercase_metaDataArray['levels'];
+      $slideatlasItemArray['tilesize'] = $lowercase_metaDataArray['tilesize'];
       }
 
     return $slideatlasItemArray;
@@ -254,8 +255,9 @@ class Slideatlas_ApiComponent extends AppComponent
         if($itemType == SLIDEATLAS_DICED_IMAGE)
           {
           $metaDataArray = $this->_getSlideatlasMetaData($item->getKey());
-          $accessibleItemArray['levels'] = $metaDataArray['levels'];
-          $accessibleItemArray['tilesize'] = $metaDataArray['tilesize'];
+          $lowercase_metaDataArray = array_change_key_case($metaDataArray);
+          $accessibleItemArray['levels'] = $lowercase_metaDataArray['levels'];
+          $accessibleItemArray['tilesize'] = $lowercase_metaDataArray['tilesize'];
           }
         array_push($returnSlideatlasItems, $accessibleItemArray);
         }
@@ -311,8 +313,9 @@ class Slideatlas_ApiComponent extends AppComponent
       if($itemType == SLIDEATLAS_DICED_IMAGE)
         {
         $metaDataArray = _getSlideatlasMetaData($regularItem->getKey());
-        $accessibleItemArray['levels'] = $metaDataArray['levels'];
-        $accessibleItemArray['tilesize'] = $metaDataArray['tilesize'];
+        $lowercase_metaDataArray = array_change_key_case($metaDataArray);
+        $accessibleItemArray['levels'] = $lowercase_metaDataArray['levels'];
+        $accessibleItemArray['tilesize'] = $lowercase_metaDataArray['tilesize'];
         }
       array_push($returnSlideatlasItems, $accessibleItemArray);
       }
