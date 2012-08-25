@@ -45,7 +45,7 @@ midas.slideatlas.user.viewersetup = function(item_id) {
             var resp = $.parseJSON(data);
             if(resp.status == 'ok') {
                 var html = json.global.webroot+'/slideatlas/user/fullscreen?image='
-                   + resp.itemname +'&levels='+ resp.levels+'&tilesize='+ resp.tilesize;
+                   + resp.collection +'&levels='+ resp.levels+'&tilesize='+ resp.tilesize;
             midas.slideatlas.user.displayviewer(html);
             }
             else

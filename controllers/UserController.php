@@ -59,8 +59,12 @@ class Slideatlas_UserController extends Slideatlas_AppController
       $args['useSession'] = true;
       $args['id'] = $itemId;
       $attributes = $this->ModuleComponent->Api->getAttributes($args);
-      echo JsonComponent::encode(array('status' => 'ok', 'itemslideatlas' => $itemSlideatlas,
-        'itemname' => $itemname, 'levels' => $attributes['levels'], 'tilesize' => $attributes['tilesize']));
+      echo JsonComponent::encode(array('status' => 'ok',
+			'itemslideatlas' => $itemSlideatlas,
+        		'itemname' => $itemname, 
+			'levels' => $attributes['levels'],
+			'tilesize' => $attributes['tilesize'],
+			'collection' => $attributes['collection']));
       }
     else
       {
@@ -186,6 +190,7 @@ class Slideatlas_UserController extends Slideatlas_AppController
     $this->view->image = $this->_getParam("image");
     $this->view->name = $this->_getParam("name");
     $this->view->tilesize = $this->_getParam("tilesize");
+    $this->view->collection = $this->_getParam("collection");
     //session_write_close();
     }
 }//end class

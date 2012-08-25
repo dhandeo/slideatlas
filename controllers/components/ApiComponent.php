@@ -59,7 +59,7 @@ class Slideatlas_ApiComponent extends AppComponent
     foreach($metadata as $m)
       {
       $mArray = $m->toArray();
-      if((!strnatcasecmp($mArray['element'], 'tilesize')) || (!strnatcasecmp($mArray['element'],'levels')))
+      if((!strnatcasecmp($mArray['element'], 'tilesize')) || (!strnatcasecmp($mArray['element'],'levels')) || (!strnatcasecmp($mArray['element'],'collection')))
         {
         if(array_key_exists(strtolower($mArray['element']), array_change_key_case($metadataArray)))
           {
@@ -185,6 +185,7 @@ class Slideatlas_ApiComponent extends AppComponent
       $lowercase_metaDataArray = array_change_key_case($metaDataArray);
       $slideatlasItemArray['levels'] = $lowercase_metaDataArray['levels'];
       $slideatlasItemArray['tilesize'] = $lowercase_metaDataArray['tilesize'];
+      $slideatlasItemArray['collection'] = $lowercase_metaDataArray['collection'];
       }
 
     return $slideatlasItemArray;
@@ -258,6 +259,7 @@ class Slideatlas_ApiComponent extends AppComponent
           $lowercase_metaDataArray = array_change_key_case($metaDataArray);
           $accessibleItemArray['levels'] = $lowercase_metaDataArray['levels'];
           $accessibleItemArray['tilesize'] = $lowercase_metaDataArray['tilesize'];
+      $accessibleItemArray['collection'] = $lowercase_metaDataArray['collection'];
           }
         array_push($returnSlideatlasItems, $accessibleItemArray);
         }
@@ -316,6 +318,7 @@ class Slideatlas_ApiComponent extends AppComponent
         $lowercase_metaDataArray = array_change_key_case($metaDataArray);
         $accessibleItemArray['levels'] = $lowercase_metaDataArray['levels'];
         $accessibleItemArray['tilesize'] = $lowercase_metaDataArray['tilesize'];
+        $accessibleItemArray['collection'] = $lowercase_metaDataArray['collection'];
         }
       array_push($returnSlideatlasItems, $accessibleItemArray);
       }
